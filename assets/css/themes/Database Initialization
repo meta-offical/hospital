@@ -1,0 +1,40 @@
+# db_init.py
+import sqlite3
+
+conn = sqlite3.connect('hospital.db')
+cursor = conn.cursor()
+
+# Create Patient Table
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS patients (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER,
+        gender TEXT
+    )
+''')
+
+# Create Doctor Table
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS doctors (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        specialty TEXT
+    )
+''')
+
+# Create Appointment Table
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS appointments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        patient_id INTEGER,
+        doctor_id INTEGER,
+        date TEXT,
+        FOREIGN KEY(patient_id) REFERENCES patients(id),
+        FOREIGN KEY(doctor_id) REFERENCES doctors(id)
+    )
+''')
+
+conn.commit()
+conn.close()
+print("Database initialized successfully.")
